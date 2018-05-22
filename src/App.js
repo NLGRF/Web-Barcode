@@ -106,6 +106,7 @@ class App extends Component {
       if((this.state.barDB == this.state.data.barCode) && (this.state.data.barCode != '')){
         this.state.status='Found in Database!'
         this.state.refresh='OK'
+        alert('OK');
       }else{
         this.state.status='Not Found in Database!'
         this.state.refresh=''
