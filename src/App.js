@@ -206,7 +206,7 @@ class App extends Component {
         <div className="App">
         <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <h1 className="App-title">Admin Recan</h1>
+        <h1 className="App-title">Admin Recan !!!</h1>
         </header><br/>
         <label>Barcode : </label>
         <input value={this.state.value} onKeyDown={this.keyPress} onChange={this.handleChange} fullWidth={true} autoFocus="autofocus"/>
