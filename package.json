@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "http://NLGRF.github.io/Web-Barcode",
   "dependencies": {
+    "bulma": "^0.7.1",
     "firebase": "^5.0.3",
     "gh-pages": "^1.1.0",
     "lodash.get": "^4.4.2",
@@ -11,6 +12,8 @@
     "lodash.set": "^4.3.2",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.4"
   },
   "scripts": {

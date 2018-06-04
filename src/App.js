@@ -5,7 +5,7 @@ import './App.css';
 import bindModel from './bindModel.js';
 import * as firebase from 'firebase';
 
-
+import Tabs from './Tabs'
 
 class App extends Component {
 
@@ -13,6 +13,13 @@ class App extends Component {
     super(props);
 
     this.state = {
+      value:'',
+      bottle:0,
+      Lbottle:0,
+      can:0,
+      point:0,
+      status:false,
+
       isGoing: true,
       guests: [],
       result:'',
@@ -24,9 +31,42 @@ class App extends Component {
       }
     };
 
+    this.handleChange = this.handleChange.bind(this);
+    this.keyPress = this.keyPress.bind(this);
+
+    this.handleCanChange = this.handleCanChange.bind(this);
+    this.handleBottleChange = this.handleBottleChange.bind(this);
+    this.handleLBottleChange = this.handleLBottleChange.bind(this);
+
     this.addGuest = this.addGuest.bind(this);
     this.summary = this.summary.bind(this);
     this.renderGuests = this.renderGuests.bind(this);
+
+    this.submitFirebase = this.submitFirebase.bind(this);
+    this.postData = this.postData.bind(this);
+  }
+
+   handleChange(e) {
+      this.setState({ value: e.target.value });
+   }
+
+   keyPress(e){
+      if(e.keyCode == 13){
+         console.log('value', e.target.value);
+         //alert('Find Enter');
+      }
+   }
+
+   handleCanChange(e) {
+    this.setState({can: e.target.value});
+  }
+
+  handleBottleChange(e) {
+    this.setState({bottle: e.target.value});
+  }
+
+  handleLBottleChange(e) {
+    this.setState({Lbottle: e.target.value});
   }
 
   addGuest(event) {
@@ -77,17 +117,17 @@ class App extends Component {
 
     return guests;
   }
-
+/*
   componentDidMount() {
         
-    var rootRef = firebase.database().ref().child('barcode');
+    var rootRef = firebase.database().ref().child('users/' + this.state.value);
    // var scanner = firebase.database().ref().child('barcode').orderByChild('key');
     rootRef.on('value', snap => {
 
-        //    console.log(snap.val());
-
+           // console.log(snap.val());
+           console.log(snap.val().point);
            this.setState ({
-             barDB: snap.val().key,
+            point: snap.val().point,
             });
            // console.log(this.state.data);  
     });
@@ -97,11 +137,61 @@ class App extends Component {
  refreshPage(){
   window.location.reload();
  }
+*/
+ submitFirebase(e){
+  e.preventDefault();
+  var uRef = firebase.database().ref().child('users/' + this.state.value);
+  //var obj = {point: this.state.point};
+  uRef.on('value', snap => {
+
+    // console.log(snap.val());
+    console.log(snap.val().point);
+    this.setState ({
+     point: snap.val().point + (this.state.bottle * 1) + (this.state.Lbottle * 1.5) + (this.state.can * 2),
+     });
+    //var obj = {point: this.state.point};
+    // console.log(this.state.data);  
+    //uRef.update(obj);
+}
+/*, function(error) {
+  if (error) {
+    // The write failed...
+    window.location.reload(); 
+  } else {
+    // Data saved successfully!
+    alert('OK');
+  }
+});
+*/ 
+  );
+   /* var obj = {point: this.state.point}; */
+   // uRef.update(obj);
+   if (this.state.value === '') {
+    // The write failed...
+    // window.location.reload(); 
+    alert('Error');
+    window.location.reload(); 
+  } else {
+    // Data saved successfully!
+    alert('OK');
+  } 
+//  alert('OK');
+ }
+
+ postData(e){
+  e.preventDefault();
+  var uRef = firebase.database().ref().child('users/' + this.state.value);
+
+  var obj = {point: this.state.point};
+  uRef.update(obj);
+  alert('OK');
+  window.location.reload(); 
+ }
 
   render() {
     const { model, arrayItem } = bindModel(this);
-    console.log('Scan : ' + this.state.data.barCode);  console.log('DB : ' + this.state.barDB);  
-
+   // console.log('Scan : ' + this.state.data.barCode);  console.log('DB : ' + this.state.barDB);  
+  // console.log('Point : ' + this.state.point);
 
       if((this.state.barDB == this.state.data.barCode) && (this.state.data.barCode != '')){
         this.state.status='Found in Database!'
@@ -116,20 +206,25 @@ class App extends Component {
         <div className="App">
         <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <h1 className="App-title">Welcome to React</h1>
+        <h1 className="App-title">Admin Recan</h1>
         </header><br/>
-          <form className="App-intro">
-            <label>Your full Data:&nbsp;</label>
-            <input type="text" {...model('data.barCode')} 
-              autoFocus="autofocus"
-            />
-
-          </form><br/>
-
-          <label>Barcode : {this.state.data.barCode}</label><br/><br/>
-          <label>{this.state.status}</label><br/><br/>
-          <button onClick={this.refreshPage}>Find Again</button>
-          <h1>{this.state.refresh}</h1>
+        <label>Barcode : </label>
+        <input value={this.state.value} onKeyDown={this.keyPress} onChange={this.handleChange} fullWidth={true} autoFocus="autofocus"/>
+        <br/><br/>
+        <label>Bottle : </label>
+        <input value={this.state.bottle} onChange={this.handleBottleChange} type="number" min="0" max="50"/>
+        <br/><br/>
+        <label>Big Bottle : </label>
+        <input value={this.state.Lbottle} onChange={this.handleLBottleChange} type="number" min="0" max="50"/>
+        <br/><br/>
+        <label>Can : </label>
+        <input value={this.state.can} onChange={this.handleCanChange} type="number" min="0" max="50"/>
+        <br/><br/>
+        <button value={this.state.status} onClick={this.submitFirebase} disabled={this.state.point}>Confirm</button>
+        <br/><br/>
+        <h1 value={this.state.point}>Point : {(this.state.bottle * 1) + (this.state.Lbottle * 1.5) + (this.state.can * 2)}</h1>
+        <br/>
+        <button onClick={this.postData} disabled={!this.state.point}>Submit</button>
         </div>
     );
   }
