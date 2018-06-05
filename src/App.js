@@ -27,6 +27,7 @@ class App extends Component {
       Ad_Lbottle:0,
       Ad_can:0,
       point:0,
+      // Apoint:0,
       status:false,
 
       isGoing: true,
@@ -187,12 +188,13 @@ aRef.on('value', snap => {
   // console.log(snap.val());
   console.log(snap.val());
   this.setState ({
-   Abottle: snap.val().bottle,
-   ALbottle: snap.val().Lbottle,
-   Acan: snap.val().can,
-   Ad_bottle: snap.val().d_bottle,
-   Ad_Lbottle: snap.val().d_Lbottle,
-   Ad_can: snap.val().d_can,
+   Abottle: (snap.val().Abottle * 1),
+   ALbottle: (snap.val().ALbottle * 1),
+   Acan: (snap.val().Acan * 1),
+   Ad_bottle: (snap.val().Ad_bottle * 1),
+   Ad_Lbottle: (snap.val().Ad_Lbottle * 1),
+   Ad_can: (snap.val().Ad_can * 1),
+  // Apoint: (this.state.Apoint * 1)
    });
   //var obj = {point: this.state.point};
   // console.log(this.state.data);  
@@ -221,12 +223,13 @@ aRef.on('value', snap => {
 
   var aRef = firebase.database().ref().child('Admin');
 
-  var obja = {Abottle: this.state.bottle,
-              ALbottle: this.state.Lbottle,
-              Acan: this.state.can,
-              Ad_bottle: this.state.d_bottle,
-              Ad_Lbottle: this.state.d_Lbottle,
-              Ad_can: this.state.d_can
+  var obja = {Abottle: Number((this.state.Abottle)) + Number((this.state.bottle)),
+              ALbottle: Number((this.state.ALbottle)) + Number((this.state.Lbottle)),
+              Acan: Number((this.state.Acan)) + Number((this.state.can)),
+              Ad_bottle: Number((this.state.Ad_bottle)) + Number((this.state.d_bottle)),
+              Ad_Lbottle: Number((this.state.Ad_Lbottle)) + Number((this.state.d_Lbottle)),
+              Ad_can: Number((this.state.Ad_can)) + Number((this.state.d_can)),
+             // Apoint: Number((this.state.Apoint)) + Number(this.state.point)
              };
   aRef.update(obja);
   alert('OK');
