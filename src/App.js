@@ -17,6 +17,15 @@ class App extends Component {
       bottle:0,
       Lbottle:0,
       can:0,
+      d_bottle:0,
+      d_Lbottle:0,
+      d_can:0,
+      Abottle:0,
+      ALbottle:0,
+      Acan:0,
+      Ad_bottle:0,
+      Ad_Lbottle:0,
+      Ad_can:0,
       point:0,
       status:false,
 
@@ -37,6 +46,10 @@ class App extends Component {
     this.handleCanChange = this.handleCanChange.bind(this);
     this.handleBottleChange = this.handleBottleChange.bind(this);
     this.handleLBottleChange = this.handleLBottleChange.bind(this);
+    
+    this.handleD_CanChange = this.handleD_CanChange.bind(this);
+    this.handleD_BottleChange = this.handleD_BottleChange.bind(this);
+    this.handleD_LBottleChange = this.handleD_LBottleChange.bind(this);
 
     this.addGuest = this.addGuest.bind(this);
     this.summary = this.summary.bind(this);
@@ -67,6 +80,18 @@ class App extends Component {
 
   handleLBottleChange(e) {
     this.setState({Lbottle: e.target.value});
+  }
+
+  handleD_CanChange(e) {
+    this.setState({d_can: e.target.value});
+  }
+
+  handleD_BottleChange(e) {
+    this.setState({d_bottle: e.target.value});
+  }
+
+  handleD_LBottleChange(e) {
+    this.setState({d_Lbottle: e.target.value});
   }
 
   addGuest(event) {
@@ -147,23 +172,32 @@ class App extends Component {
     // console.log(snap.val());
     console.log(snap.val().point);
     this.setState ({
-     point: snap.val().point + (this.state.bottle * 1) + (this.state.Lbottle * 1.5) + (this.state.can * 2),
+     point: snap.val().point + (this.state.bottle * 1) + (this.state.Lbottle * 1.5) + (this.state.can * 2) + 
+            (this.state.d_bottle * 2) + (this.state.d_Lbottle * 2.5) + (this.state.d_can * 3),
      });
     //var obj = {point: this.state.point};
     // console.log(this.state.data);  
     //uRef.update(obj);
-}
-/*, function(error) {
-  if (error) {
-    // The write failed...
-    window.location.reload(); 
-  } else {
-    // Data saved successfully!
-    alert('OK');
-  }
 });
-*/ 
-  );
+
+var aRef = firebase.database().ref().child('Admin');
+//var obj = {point: this.state.point};
+aRef.on('value', snap => {
+
+  // console.log(snap.val());
+  console.log(snap.val());
+  this.setState ({
+   Abottle: snap.val().bottle,
+   ALbottle: snap.val().Lbottle,
+   Acan: snap.val().can,
+   Ad_bottle: snap.val().d_bottle,
+   Ad_Lbottle: snap.val().d_Lbottle,
+   Ad_can: snap.val().d_can,
+   });
+  //var obj = {point: this.state.point};
+  // console.log(this.state.data);  
+  //uRef.update(obj);
+});
    /* var obj = {point: this.state.point}; */
    // uRef.update(obj);
    if (this.state.value === '') {
@@ -184,6 +218,17 @@ class App extends Component {
 
   var obj = {point: this.state.point};
   uRef.update(obj);
+
+  var aRef = firebase.database().ref().child('Admin');
+
+  var obja = {Abottle: this.state.bottle,
+              ALbottle: this.state.Lbottle,
+              Acan: this.state.can,
+              Ad_bottle: this.state.d_bottle,
+              Ad_Lbottle: this.state.d_Lbottle,
+              Ad_can: this.state.d_can
+             };
+  aRef.update(obja);
   alert('OK');
   window.location.reload(); 
  }
@@ -210,7 +255,7 @@ class App extends Component {
         </header><br/>
         <label>Barcode : </label>
         <input value={this.state.value} onKeyDown={this.keyPress} onChange={this.handleChange} fullWidth={true} autoFocus="autofocus"/>
-        <br/><br/>
+        <br/><br/><hr/>
         <label>Bottle : </label>
         <input value={this.state.bottle} onChange={this.handleBottleChange} type="number" min="0" max="50"/>
         <br/><br/>
@@ -219,11 +264,21 @@ class App extends Component {
         <br/><br/>
         <label>Can : </label>
         <input value={this.state.can} onChange={this.handleCanChange} type="number" min="0" max="50"/>
+        <br/><br/><hr/>
+        <label>Divice Bottle : </label>
+        <input value={this.state.d_bottle} onChange={this.handleD_BottleChange} type="number" min="0" max="50"/>
+        <br/><br/>
+        <label>Divice Big Bottle : </label>
+        <input value={this.state.d_Lbottle} onChange={this.handleD_LBottleChange} type="number" min="0" max="50"/>
+        <br/><br/>
+        <label>Divice Can : </label>
+        <input value={this.state.d_can} onChange={this.handleD_CanChange} type="number" min="0" max="50"/>
         <br/><br/>
         <button value={this.state.status} onClick={this.submitFirebase} disabled={this.state.point}>Confirm</button>
-        <br/><br/>
-        <h1 value={this.state.point}>Point : {(this.state.bottle * 1) + (this.state.Lbottle * 1.5) + (this.state.can * 2)}</h1>
-        <br/>
+        <br/><br/><hr/>
+        <h1 value={this.state.point}>Point : {(this.state.bottle * 1) + (this.state.Lbottle * 1.5) + (this.state.can * 2) + 
+                                              (this.state.d_bottle * 2) + (this.state.d_Lbottle * 2.5) + (this.state.d_can * 3)}</h1>
+        <br/><hr/>
         <button onClick={this.postData} disabled={!this.state.point}>Submit</button>
         </div>
     );
