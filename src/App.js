@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import logo from './recan.jpg';
 import './App.css';
 
 import bindModel from './bindModel.js';
@@ -20,12 +20,18 @@ class App extends Component {
       d_bottle:0,
       d_Lbottle:0,
       d_can:0,
+      book_A:0,
+      book_B:0,
+      book_C:0,
       Abottle:0,
       ALbottle:0,
       Acan:0,
       Ad_bottle:0,
       Ad_Lbottle:0,
       Ad_can:0,
+      Evbook_A:0,
+      Evbook_B:0,
+      Evbook_C:0,
       point:0,
       // Apoint:0,
       status:false,
@@ -51,6 +57,10 @@ class App extends Component {
     this.handleD_CanChange = this.handleD_CanChange.bind(this);
     this.handleD_BottleChange = this.handleD_BottleChange.bind(this);
     this.handleD_LBottleChange = this.handleD_LBottleChange.bind(this);
+
+    this.handleBook_AChange = this.handleBook_AChange.bind(this);
+    this.handleBook_BChange = this.handleBook_BChange.bind(this);
+    this.handleBook_CChange = this.handleBook_CChange.bind(this);
 
     this.addGuest = this.addGuest.bind(this);
     this.summary = this.summary.bind(this);
@@ -93,6 +103,18 @@ class App extends Component {
 
   handleD_LBottleChange(e) {
     this.setState({d_Lbottle: e.target.value});
+  }
+
+  handleBook_AChange(e) {
+    this.setState({book_A: e.target.value});
+  }
+
+  handleBook_BChange(e) {
+    this.setState({book_B: e.target.value});
+  }
+
+  handleBook_CChange(e) {
+    this.setState({book_C: e.target.value});
   }
 
   addGuest(event) {
@@ -174,7 +196,8 @@ class App extends Component {
     console.log(snap.val().point);
     this.setState ({
      point: snap.val().point + (this.state.bottle * 1) + (this.state.Lbottle * 1.5) + (this.state.can * 2) + 
-            (this.state.d_bottle * 2) + (this.state.d_Lbottle * 2.5) + (this.state.d_can * 3),
+            (this.state.d_bottle * 2) + (this.state.d_Lbottle * 2.5) + (this.state.d_can * 3) + 
+            (this.state.book_A * 35) + (this.state.book_B * 25) + (this.state.book_C * 20)
      });
     //var obj = {point: this.state.point};
     // console.log(this.state.data);  
@@ -194,6 +217,9 @@ aRef.on('value', snap => {
    Ad_bottle: (snap.val().Ad_bottle * 1),
    Ad_Lbottle: (snap.val().Ad_Lbottle * 1),
    Ad_can: (snap.val().Ad_can * 1),
+   Evbook_A: (snap.val().Evbook_A * 1),
+   Evbook_B: (snap.val().Evbook_B * 1),
+   Evbook_C: (snap.val().Evbook_C * 1),
   // Apoint: (this.state.Apoint * 1)
    });
   //var obj = {point: this.state.point};
@@ -229,6 +255,9 @@ aRef.on('value', snap => {
               Ad_bottle: Number((this.state.Ad_bottle)) + Number((this.state.d_bottle)),
               Ad_Lbottle: Number((this.state.Ad_Lbottle)) + Number((this.state.d_Lbottle)),
               Ad_can: Number((this.state.Ad_can)) + Number((this.state.d_can)),
+              Evbook_A: Number((this.state.Evbook_A)) + Number((this.state.book_A)),
+              Evbook_B: Number((this.state.Evbook_B)) + Number((this.state.book_B)),
+              Evbook_C: Number((this.state.Evbook_C)) + Number((this.state.book_C)),
              // Apoint: Number((this.state.Apoint)) + Number(this.state.point)
              };
   aRef.update(obja);
@@ -253,34 +282,43 @@ aRef.on('value', snap => {
     return (
         <div className="App">
         <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <h1 className="App-title">Admin Recan !!!</h1>
+        <img src={logo} className="" alt="logo" height="48px" width="48px"/>
         </header><br/>
         <label>Barcode : </label>
         <input value={this.state.value} onKeyDown={this.keyPress} onChange={this.handleChange} fullWidth={true} autoFocus="autofocus"/>
         <br/><br/><hr/>
         <label>Bottle : </label>
-        <input value={this.state.bottle} onChange={this.handleBottleChange} type="number" min="0" max="50"/>
+        <input value={this.state.bottle} onChange={this.handleBottleChange} type="number" min="0"/>
         <br/><br/>
         <label>Big Bottle : </label>
-        <input value={this.state.Lbottle} onChange={this.handleLBottleChange} type="number" min="0" max="50"/>
+        <input value={this.state.Lbottle} onChange={this.handleLBottleChange} type="number" min="0"/>
         <br/><br/>
         <label>Can : </label>
-        <input value={this.state.can} onChange={this.handleCanChange} type="number" min="0" max="50"/>
+        <input value={this.state.can} onChange={this.handleCanChange} type="number" min="0"/>
         <br/><br/><hr/>
         <label>Divice Bottle : </label>
-        <input value={this.state.d_bottle} onChange={this.handleD_BottleChange} type="number" min="0" max="50"/>
+        <input value={this.state.d_bottle} onChange={this.handleD_BottleChange} type="number" min="0"/>
         <br/><br/>
         <label>Divice Big Bottle : </label>
-        <input value={this.state.d_Lbottle} onChange={this.handleD_LBottleChange} type="number" min="0" max="50"/>
+        <input value={this.state.d_Lbottle} onChange={this.handleD_LBottleChange} type="number" min="0"/>
         <br/><br/>
         <label>Divice Can : </label>
-        <input value={this.state.d_can} onChange={this.handleD_CanChange} type="number" min="0" max="50"/>
+        <input value={this.state.d_can} onChange={this.handleD_CanChange} type="number" min="0"/>
+        <br/><br/><hr/>
+        <label>Book Type A : </label>
+        <input value={this.state.book_A} onChange={this.handleBook_AChange} type="number" min="0"/>
+        <br/><br/>
+        <label>Book Type B : </label>
+        <input value={this.state.book_B} onChange={this.handleBook_BChange} type="number" min="0"/>
+        <br/><br/>
+        <label>Book Type C : </label>
+        <input value={this.state.book_C} onChange={this.handleBook_CChange} type="number" min="0"/>
         <br/><br/>
         <button value={this.state.status} onClick={this.submitFirebase} disabled={this.state.point}>Confirm</button>
         <br/><br/><hr/>
-        <h1 value={this.state.point}>Point : {(this.state.bottle * 1) + (this.state.Lbottle * 1.5) + (this.state.can * 2) + 
-                                              (this.state.d_bottle * 2) + (this.state.d_Lbottle * 2.5) + (this.state.d_can * 3)}</h1>
+        <h2 value={this.state.point}>Point : {(this.state.bottle * 1) + (this.state.Lbottle * 1.5) + (this.state.can * 2) + 
+                                              (this.state.d_bottle * 2) + (this.state.d_Lbottle * 2.5) + (this.state.d_can * 3) + 
+                                              (this.state.book_A * 35) + (this.state.book_B * 25) + (this.state.book_C * 20)}</h2>
         <br/><hr/>
         <button onClick={this.postData} disabled={!this.state.point}>Submit</button>
         </div>
